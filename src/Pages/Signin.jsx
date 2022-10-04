@@ -3,11 +3,14 @@ import { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/reducers/user";
 
 import authApi from "../api/auth";
 
 const Signin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const [phoneErrText, setPhoneErrText] = useState("");
@@ -19,7 +22,7 @@ const Signin = () => {
     setPasswordErrText("");
 
     const data = new FormData(e.target);
-    const phone = data.get("phone").trim().toLowerCase();
+    const phone = data.get("phone").trim();
     const password = data.get("password").trim();
 
     let err = false;
@@ -38,15 +41,15 @@ const Signin = () => {
     setLoading(true);
 
     try {
-      const resAuth = await authApi.login({ phone, password });
-
+      const res = await authApi.signin({ phone, password });
+      dispatch(setUser(res.user));
+      localStorage.setItem("token", res.token);
       setLoading(false);
-      localStorage.setItem("token", resAuth.token);
       navigate("/");
     } catch (error) {
       const errors = error.data.errors;
       errors.forEach((e) => {
-        if (e.param === "username") {
+        if (e.param === "phone") {
           setPhoneErrText(e.msg);
         }
         if (e.param === "password") {
@@ -77,8 +80,8 @@ const Signin = () => {
           name="phone"
           label="Phone"
           disabled={loading}
-          error={setPhoneErrText !== ""}
-          helperText={setPhoneErrText}
+          error={phoneErrText !== ""}
+          helperText={phoneErrText}
         />
         <TextField
           fullWidth

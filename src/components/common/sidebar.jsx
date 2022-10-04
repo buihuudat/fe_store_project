@@ -8,8 +8,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../redux/reducers/user";
+import { setCartModal } from "../../redux/reducers/modal";
 const navData = [
   {
     name: "BHD store",
@@ -33,11 +34,22 @@ export default function SideBar() {
   const user = useSelector((state) => state.user.data);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    localStorage.removeItem("token");
+    dispatch(setUser({}));
+  };
+
+  const handleAddCart = () => {
+    dispatch(setCartModal(true));
   };
   return (
     <Box sx={{ display: "flex" }}>
@@ -74,7 +86,7 @@ export default function SideBar() {
               gap: 3,
             }}
           >
-            <IconButton>
+            <IconButton onClick={handleAddCart}>
               <ShoppingCartIcon />
             </IconButton>
             <IconButton
@@ -99,9 +111,13 @@ export default function SideBar() {
               "aria-labelledby": "basic-button",
             }}
           >
-            {user._id && <MenuItem onClick={handleClose}>Profile</MenuItem>}
+            {user._id && (
+              <MenuItem onClick={handleClose} component={Link} to="/profile">
+                Profile
+              </MenuItem>
+            )}
             {user._id && <MenuItem onClick={handleClose}>My Cart</MenuItem>}
-            {user._id && <MenuItem onClick={handleClose}>Logout</MenuItem>}
+            {user._id && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
             {!user._id && (
               <MenuItem onClick={handleClose} component={Link} to="/signin">
                 Signin

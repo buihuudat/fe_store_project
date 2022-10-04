@@ -8,6 +8,7 @@ import { Rate } from "rsuite";
 import { Button } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { setAddProduct } from "../../redux/reducers/products";
+import Noti from "../common/Noti";
 const style = {
   position: "absolute",
   top: "50%",
@@ -21,6 +22,8 @@ const style = {
 
 export default function ProductModal() {
   const product = useSelector((state) => state.modal.product);
+  const addProduct = useSelector((state) => state.product.add);
+
   const open = product.status;
   const data = product.data;
   const dispatch = useDispatch();
@@ -34,7 +37,17 @@ export default function ProductModal() {
   };
 
   const handleAdd = () => {
-    dispatch(setAddProduct(data));
+    let productArr = [];
+    productArr = [...addProduct, data];
+    dispatch(setAddProduct(productArr));
+
+    Noti("success", "added product to cart");
+    dispatch(
+      setModal({
+        status: false,
+        data: {},
+      })
+    );
   };
 
   return (

@@ -5,6 +5,7 @@ const initialState = {
     status: false,
     data: {},
   },
+  cart: false,
 };
 
 export const modalReducer = createSlice({
@@ -14,8 +15,11 @@ export const modalReducer = createSlice({
     setModal: (state, action) => {
       state.product = action.payload;
     },
+    setCartModal: (state, action) => {
+      state.cart = action.payload;
+    },
   },
 });
 
-export const { setModal } = modalReducer.actions;
+export const { setModal, setCartModal } = modalReducer.actions;
 export default modalReducer.reducer;

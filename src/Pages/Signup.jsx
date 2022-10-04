@@ -64,9 +64,11 @@ const Signup = () => {
         password,
         confirmPassword,
       });
-      dispatch(setUser(res));
+      dispatch(setUser(res.user));
       setLogin(true);
       setLoading(false);
+      localStorage.setItem("token", res.token);
+      navigate("/");
     } catch (error) {
       const errors = error.data.errors;
       errors.forEach((e) => {
