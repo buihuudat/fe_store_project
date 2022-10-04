@@ -68,28 +68,32 @@ export default function Cart() {
           {products.map((product) => (
             <CartProduct key={product.id} {...product} />
           ))}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h4" fontWeight={600}>
-              Pay {costTotal}$
-            </Typography>
-            <Button
-              variant={"contained"}
-              onClick={() => {
-                Noti("success", "Pay successfully");
-                dispatch(setCartModal(false));
-                dispatch(setAddProduct([]));
+          {!products.length ? (
+            <Typography>No item</Typography>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
               }}
             >
-              Pay
-            </Button>
-          </Box>
+              <Typography variant="h4" fontWeight={600}>
+                Pay {costTotal}$
+              </Typography>
+              <Button
+                variant={"contained"}
+                onClick={() => {
+                  Noti("success", "Pay successfully");
+                  dispatch(setCartModal(false));
+                  dispatch(setAddProduct([]));
+                }}
+              >
+                Pay
+              </Button>
+            </Box>
+          )}
         </Box>
       </Modal>
     </div>
