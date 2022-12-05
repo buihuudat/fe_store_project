@@ -1,7 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 
-const baseURL = "http://localhost:5000/api/v1";
+const baseURL = "https://buihuudat-store.onrender.com/api/v1";
 const token = () => localStorage.getItem("token");
 
 const axiosClient = axios.create({
